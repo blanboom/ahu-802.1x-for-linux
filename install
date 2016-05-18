@@ -1,4 +1,4 @@
 #/bin/bash
 
-gcc -o my802.1x main.c ath.c packet.c md5.c md5.h
+gcc -o my8021x main.c packet.c packet.h md5.c md5.h
 

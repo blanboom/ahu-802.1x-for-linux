@@ -14,14 +14,15 @@
 #include<string.h>
 #include<signal.h>
 #include"md5.h"
+#include"packet.h"
 
 uint8_t p_hdr[60]={0x00},buf[512];
 uint8_t dstmac[6]={0x01,0x80,0xc2,0x00,0x00,0x03};//802.1x的组地址
 uint8_t localmac[6]={0x00};//本机的mac地址
 struct sockaddr_ll toaddr;
 int sockfd,stat=0;
-extern u_char name[10],passwd[20];
-u_char md5buf[30],digmd5buf[16];
+unsigned char name[15],passwd[20],interface[10];
+unsigned char md5buf[30],digmd5buf[16];
 
 
 /***********************************************************
@@ -31,7 +32,7 @@ void getlocaleth() {
 	struct ifreq ifr;
 	int i;
 	sockfd=socket(PF_PACKET,SOCK_RAW,htons(0x888e));
-	bcopy("eth0",ifr.ifr_name,6);
+	bcopy(interface,ifr.ifr_name,6);
 	if(ioctl(sockfd,SIOCGIFHWADDR,&ifr)==-1) {
 		perror("ioctl");
 		exit(1);

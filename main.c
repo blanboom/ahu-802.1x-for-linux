@@ -7,42 +7,36 @@ athor:zfk
 #include<errno.h>
 #include<signal.h>
 #include<termios.h>
+#include"packet.h"
 
-u_char name[15],passwd[30];
 void sig_inter(int);
 
 int main(int argc,char *argv[]) {
-	char c;
-	int i=0;
 	struct termios initialsetting,newsetting;
-
-	tcgetattr(fileno(stdin),&initialsetting);
-	puts("name");
-	while((c=getchar())!='\n') {
-		name[i++]=c;
+	
+	if(getuid() != 0)
+	{
+		fprintf(stderr, "Require root privilege.\n");
+		exit(-1);
 	}
-
-
-	newsetting=initialsetting;
-	newsetting.c_lflag &=~ECHO;
-	if(tcsetattr(fileno(stdin),TCSAFLUSH,&newsetting)!=0) {
-		perror("tcsetattr");
-		exit(1);
+	
+	if (argc != 4) {
+		fprintf(stderr, "Usage: %s username password interface\n", argv[0]);
+		exit(-1);
 	}
+	
+	strcpy(name, argv[1]);
+	strcpy(passwd, argv[2]);
+	strcpy(interface, argv[3]);
 
-
-	i=0;
-	puts("password");
-	while((c=getchar())!='\n') {
-		passwd[i++]=c;
-	}
-	if(tcsetattr(fileno(stdin),TCSAFLUSH,&initialsetting)!=0) {
-		perror("tcsetattr");
-		exit(1);
-	}
+	printf("Name: %s, Password: %s, Interface: %s\n", argv[1], argv[2], argv[3]);
 
 	signal(SIGINT,sig_inter);
-	start_ath();
+
+	getlocaleth();//获取mac信息
+	send_startp();//开始认证
+	upinfo();//上传信息
+
 	exit(0);	
 }
 
