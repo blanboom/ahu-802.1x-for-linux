@@ -1,4 +1,4 @@
-做了一点简单的修改，使之符合自己的使用习惯
+做了一点简单的修改，使之符合自己的使用习惯，同时更方便在 OpenWrt 下使用
 
 使用方法: my8021x username password interface
 
